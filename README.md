@@ -1,2 +1,0 @@
-# nol-utils
-helpful scripts
