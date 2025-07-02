@@ -8,11 +8,9 @@ set -e
 
 PLAYLIST="$1"
 OUTDIR="$2"
-QUALITY="${3:-best}"
 
 if [ -z "$PLAYLIST" ] || [ -z "$OUTDIR" ]; then
-    echo "Usage: $0 <playlist_url_or_id> <output_folder> [quality]"
-    echo "Quality options: best, worst, 720p, 480p, etc. Default is 'best'"
+    echo "Usage: $0 <playlist_url_or_id> <output_folder>"
     exit 1
 fi
 
@@ -24,14 +22,11 @@ fi
 mkdir -p "$OUTDIR"
 
 echo "Downloading playlist to: $OUTDIR"
-echo "Quality: $QUALITY"
 
 yt-dlp \
-    --format "$QUALITY" \
+    -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" \
     --output "$OUTDIR/%(playlist_index)02d - %(title)s.%(ext)s" \
     --embed-metadata \
-    --write-description \
-    --write-info-json \
     "$PLAYLIST"
 
 echo "Download complete!"
