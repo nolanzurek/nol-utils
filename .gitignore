@@ -1,3 +1,5 @@
 .env
 outputs/
 outputs/*
+handwritten_math_transcribe_temp
+handwritten_math_transcribe_temp/*
