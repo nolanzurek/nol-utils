@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ../.env
+source "$(dirname "$0")/../.env"
 
 working_dir=$(pwd)
 
