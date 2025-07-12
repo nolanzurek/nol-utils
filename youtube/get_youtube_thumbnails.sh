@@ -1,16 +1,57 @@
 #!/bin/bash
 
-# Usage: ./get_youtube_thumbnails.sh <playlist_url_or_id> <output_folder> <image_format>
-# Example: ./get_youtube_thumbnails.sh qwertyuiopasdfghjklzxcvbnm ./thumbnails jpg
+# Usage: ./get_youtube_thumbnails.sh <playlist_url_or_id> [-o output_folder] [-f image_format]
+# Example: ./get_youtube_thumbnails.sh qwertyuiopasdfghjklzxcvbnm -o ./thumbnails -f jpg
 
 set -e
 
-PLAYLIST="$1"
-OUTDIR="$2"
-FORMAT="$3"
+source "$(dirname "$0")/../.env"
 
-if [ -z "$PLAYLIST" ] || [ -z "$OUTDIR" ] || [ -z "$FORMAT" ]; then
-    echo "Usage: $0 <playlist_url_or_id> <output_folder> <image_format>"
+# Default values
+OUTDIR="$OUTPUT_DIR/youtube_thumbnails_$(date +%Y%m%d_%H%M%S)"
+FORMAT="png"
+PLAYLIST=""
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -o|--output)
+            OUTDIR="$2"
+            shift 2
+            ;;
+        -f|--format)
+            FORMAT="$2"
+            shift 2
+            ;;
+        -h|--help)
+            echo "Usage: $0 <playlist_url_or_id> [-o output_folder] [-f image_format]"
+            echo "  -o, --output    Output folder (default: ./thumbnails_YYYYMMDD_HHMMSS)"
+            echo "  -f, --format    Image format (default: png)"
+            echo "  -h, --help      Show this help message"
+            echo ""
+            echo "Example: $0 qwertyuiopasdfghjklzxcvbnm -o ./thumbnails -f jpg"
+            exit 0
+            ;;
+        -*)
+            echo "Unknown option: $1"
+            exit 1
+            ;;
+        *)
+            if [ -z "$PLAYLIST" ]; then
+                PLAYLIST="$1"
+            else
+                echo "Error: Multiple playlist arguments provided"
+                exit 1
+            fi
+            shift
+            ;;
+    esac
+done
+
+if [ -z "$PLAYLIST" ]; then
+    echo "Error: Playlist URL or ID is required"
+    echo "Usage: $0 <playlist_url_or_id> [-o output_folder] [-f image_format]"
+    echo "Use -h or --help for more information"
     exit 1
 fi
 
