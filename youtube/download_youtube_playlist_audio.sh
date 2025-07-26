@@ -33,7 +33,7 @@ mkdir -p "$OUTDIR"
 echo "Downloading playlist to: $OUTDIR"
 
 yt-dlp \
-    -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" \
+    -f "ba[ext=m4a]" \
     --output "$OUTDIR/%(playlist_index)02d - %(title)s.%(ext)s" \
     --embed-metadata \
     "$PLAYLIST"
