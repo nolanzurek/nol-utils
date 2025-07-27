@@ -9,17 +9,53 @@ set -e
 # import env
 source "$(dirname "$0")/../.env"
 
-PLAYLIST="$1"
-OUTDIR_NAME="$2"
+# Initialize variables
+PLAYLIST=""
+OUTDIR_PATH=""
+OUTDIR_NAME=""
 
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --output-dir-path)
+            OUTDIR_PATH="$2"
+            shift 2
+            ;;
+        --output-dir-name)
+            OUTDIR_NAME="$2"
+            shift 2
+            ;;
+        -*)
+            echo "Unknown option: $1"
+            echo "Usage: $0 <playlist_url_or_id> [--output-dir-path <path>] [--output-dir-name <name>]"
+            exit 1
+            ;;
+        *)
+            if [ -z "$PLAYLIST" ]; then
+                PLAYLIST="$1"
+            else
+                echo "Unexpected argument: $1"
+                echo "Usage: $0 <playlist_url_or_id> [--output-dir-path <path>] [--output-dir-name <name>]"
+                exit 1
+            fi
+            shift
+            ;;
+    esac
+done
+
+# Set defaults if not provided
 if [ -z "$OUTDIR_NAME" ]; then
-    OUTDIR_NAME="youtube_playlist_$(date +%Y%m%d_%H%M%S)"
+    OUTDIR_NAME=""
 fi
 
-OUTDIR="$OUTPUT_DIR/$OUTDIR_NAME"
+if [ -z "$OUTDIR_PATH" ]; then
+    OUTDIR_PATH="$OUTPUT_DIR"
+fi
+
+OUTDIR="$OUTDIR_PATH/$OUTDIR_NAME"
 
 if [ -z "$PLAYLIST" ]; then
-    echo "Usage: $0 <playlist_url_or_id> <output_folder_name>?"
+    echo "Usage: $0 <playlist_url_or_id> [--output-dir-path <path>] [--output-dir-name <name>]"
     exit 1
 fi
 
