@@ -2,9 +2,16 @@
 # filepath: /Users/nzurek/Programming/nol-utils/nol_utils.sh
 
 # Check if at least one argument is provided
-if [ $# -eq 0 ]; then
-    echo "Usage: nol_utils <script_name> [arguments...]"
-    exit 1
+
+# If --list flag is provided, recursively list all .sh scripts
+if [[ "$1" == "--list" ]]; then
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    echo "Available nol-utils scripts:"
+    find "$SCRIPT_DIR" -type f -name "*.sh" | while read -r script; do
+        script_name="$(basename "$script" .sh)"
+        echo "$script_name"
+    done
+    exit 0
 fi
 
 # Get script name and find it exactly one level down
