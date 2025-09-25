@@ -1,5 +1,4 @@
 #!/bin/bash
-# filepath: /Users/nzurek/Programming/nol-utils/nol_utils.sh
 
 # Check if at least one argument is provided
 
